@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="ar">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <link rel="shortcut icon" href="images/OIP.png">
+  <title>العمدة خالد صقر – رمز المسدس</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css">
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      font-family: 'Cairo', sans-serif;
+      direction: rtl;
+      text-align: center;
+      background-color: #f0f0f0;
+      overflow-x: hidden;
+    }
+
+    /* ===== الشريط العلوي المتحرك ===== */
+    .top-ticker {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background: linear-gradient(90deg, rgba(0, 74, 173, 0.98), rgba(0, 180, 216, 0.98));
+      color: #fff;
+      z-index: 10010;
+      overflow: hidden;
+      padding: 10px 0;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+    }
+
+    .top-ticker__inner {
+      display: inline-block;
+      white-space: nowrap;
+      will-change: transform;
+      animation: topTickerMove 18s linear infinite;
+    }
+
+    .top-ticker__inner h1 {
+      display: inline-block;
+      font-size: clamp(22px, 3.2vw, 32px);
+      font-weight: 700;
+      letter-spacing: 1px;
+      padding-right: 40px;
+      direction: rtl;
+      font-size: 36px;
+    font-weight: bold;
+    color: #003366;
+    margin-bottom: 20px;
+    padding: 15px;
+    background: linear-gradient(90deg, #4CAF50, #003366);
+    color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    }
+
+    @keyframes topTickerMove {
+      from {
+        transform: translateX(100%);
+      }
+
+      to {
+        transform: translateX(-100%);
+      }
+    }
+
+    .top-ticker__inner:hover {
+      animation-play-state: paused;
+    }
+
+    body {
+      --top-ticker-height: 60px;
+    }
+
+    #pageContent {
+      padding-top: var(--top-ticker-height);
+    }
+
+    /* شاشة الترحيب */
+    #intro {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #002244, #0056b3);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      overflow: hidden;
+    }
+
+    #intro h1 {
+      color: white;
+      font-size: clamp(30px, 7vw, 64px);
+      text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.6);
+      opacity: 0;
+      animation: fadeInText 3s ease forwards 1s;
+    }
+
+    @keyframes fadeInText {
+      to {
+        opacity: 1;
+      }
+    }
+
+    #intro img {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      opacity: 0;
+      object-fit: contain;
+    }
+
+    #intro .gun1,
+    #intro .gun2 {
+      width: 65vw;
+      height: auto;
+    }
+
+    #intro .gun1 {
+      animation: zoomIn 5s ease forwards 1s;
+    }
+
+    #intro .gun2 {
+      animation: spinIn 5s ease forwards 2.5s;
+    }
+
+    #intro .logo {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0;
+      animation: logoFadeIn 3s ease forwards 6.5s;
+    }
+
+    #intro .support {
+      width: 70%;
+      max-width: 600px;
+      height: auto;
+      animation: spinInSlow 5s ease forwards 5s;
+    }
+
+    @keyframes zoomIn {
+      0% {
+        transform: translate(-50%, -50%) scale(0.7);
+        opacity: 0;
+      }
+
+      100% {
+        transform: translate(-50%, -50%) scale(1.1);
+        opacity: 1;
+      }
+    }
+
+    @keyframes spinIn {
+      0% {
+        transform: translate(-50%, -50%) rotate(-180deg) scale(0.8);
+        opacity: 0;
+      }
+
+      100% {
+        transform: translate(-50%, -50%) rotate(0deg) scale(1);
+        opacity: 1;
+      }
+    }
+
+    @keyframes spinInSlow {
+      0% {
+        transform: translate(-50%, -50%) rotate(90deg) scale(0.9);
+        opacity: 0;
+      }
+
+      100% {
+        transform: translate(-50%, -50%) rotate(0deg) scale(1.05);
+        opacity: 1;
+      }
+    }
+
+    @keyframes logoFadeIn {
+      to {
+        opacity: 1;
+      }
+    }
+
+    #intro.fadeOut {
+      animation: fadeOutIntro 2s ease forwards;
+    }
+
+    @keyframes fadeOutIntro {
+      to {
+        opacity: 0;
+        visibility: hidden;
+      }
+    }
+
+    /* ✅ الطبقة الشفافة في نهاية الأنيميشن */
+    .intro-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(4px);
+      opacity: 0;
+      animation: overlayFade 2s ease forwards 6s;
+      z-index: 9999;
+    }
+
+    @keyframes overlayFade {
+      from {
+        opacity: 0;
+      }
+
+      to {
+        opacity: 1;
+      }
+    }
+
+    /* المحتوى */
+    #pageContent {
+      opacity: 0;
+      transition: opacity 1.5s ease;
+    }
+
+    #pageContent.visible {
+      opacity: 1;
+    }
+
+    .hero-logo-container {
+      width: 100%;
+      overflow: hidden;
+    }
+
+    .hero-logo {
+      width: 100%;
+      height: auto;
+      display: block;
+      object-fit: cover;
+      animation: fadeInLogo 2s ease forwards 1s;
+      opacity: 0;
+    }
+
+    @keyframes fadeInLogo {
+      0% {
+        opacity: 0;
+        transform: scale(1.05);
+      }
+
+      100% {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    #formSection {
+      padding: 50px 20px 80px;
+      background: rgba(255, 255, 255, 0.95);
+      border-top: 4px solid #003366;
+    }
+
+    #formSection h1 {
+      color: #003366;
+      font-size: clamp(28px, 6vw, 44px);
+      margin-bottom: 35px;
+    }
+
+    /* ✅ تعديل مظهر حقل الاسم */
+    #nameInput {
+      width: 90%;
+      max-width: 500px;
+      padding: 18px 22px;
+      font-size: 32px;
+      color: #2e7d32;
+      border: 2px solid #4CAF50;
+      border-radius: 14px;
+      outline: none;
+      transition: all 0.3s ease-in-out;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      margin: 18px auto;
+      display: block;
+      font-weight: bold;
+
+
+    }
+
+    #nameInput:focus {
+      border-color: #003366;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+      transform: scale(1.02);
+    }
+
+    .custom-file-label {
+      display: inline-block;
+      padding: 16px 32px;
+      font-size: 22px;
+      background-color: #4CAF50;
+      color: #fff;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: background-color 0.3s, transform 0.2s;
+      margin-top: 20px;
+    }
+
+    .custom-file-label:hover {
+      background-color: #45a049;
+      transform: translateY(-2px);
+    }
+
+    button,
+    a {
+      display: inline-block;
+      padding: 16px 32px;
+      font-size: 22px;
+      border-radius: 12px;
+      border: none;
+      background-color: #4CAF50;
+      color: #fff;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s, transform 0.2s;
+      margin: 25px 8px 0;
+      text-decoration: none;
+    }
+
+    button:hover,
+    a:hover {
+      background-color: #45a049;
+      transform: translateY(-3px);
+    }
+
+    #cropperContainer {
+      display: none;
+      margin-top: 30px;
+    }
+
+    #preview {
+      width: 300px;
+      height: 300px;
+      margin: 20px auto;
+      overflow: hidden;
+      border: 2px solid #ccc;
+      border-radius: 12px;
+    }
+
+    #preview img {
+      max-width: 100%;
+    }
+
+    #canvasContainer {
+      position: relative;
+      width: 100%;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: 40px;
+    }
+
+    #finalCanvas {
+      width: 100%;
+      height: auto;
+      display: none;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    /* ===== بوكس النتيجة الأخضر المتوهج ===== */
+    #resultText {
+      display: none;
+      margin: 40px auto;
+      padding: 30px 20px;
+      width: fit-content;
+      max-width: 90%;
+      background: linear-gradient(135deg, #2e7d32, #43a047);
+      border-radius: 22px;
+      box-shadow: 0 0 20px rgba(67, 160, 71, 0.6);
+      color: #fff;
+      animation: popIn 1s ease forwards, pulseGlow 3s infinite ease-in-out;
+      transform: scale(0.8);
+      opacity: 0;
+    }
+
+    @keyframes popIn {
+      0% {
+        transform: scale(0.8);
+        opacity: 0;
+      }
+
+      60% {
+        transform: scale(1.05);
+        opacity: 1;
+      }
+
+      100% {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    @keyframes pulseGlow {
+
+      0%,
+      100% {
+        box-shadow: 0 0 20px rgba(67, 160, 71, 0.6);
+      }
+
+      50% {
+        box-shadow: 0 0 35px rgba(76, 175, 80, 0.9);
+      }
+    }
+
+    #resultText h2 {
+      color: #fff;
+      font-size: 46px;
+      letter-spacing: 1px;
+      margin-bottom: 10px;
+      text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    #resultText p {
+      color: #fff;
+      font-size: 32px;
+      font-weight: bold;
+      margin-top: 0;
+      text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    @media (max-width: 768px) {
+      #resultText h2 {
+        font-size: 34px;
+      }
+
+      #resultText p {
+        font-size: 26px;
+      }
+    }
+
+    /* كود حاطه من اجل الشاشات الصغيرة للشريط المتاحرك */
+    /* ✅ تصغير الشريط العلوي في الموبايل */
+@media (max-width: 600px) {
+  .top-ticker {
+    padding: 6px 0;
+  }
+
+  .top-ticker__inner h1 {
+    font-size: 18px !important;
+    padding-right: 20px;
+  }
+
+  body {
+    --top-ticker-height: 45px; /* تقليل الارتفاع */
+  }
+}
+
+/* ✅ منع الشريط من تغطية الصورة */
+.hero-logo-container {
+  margin-top: var(--top-ticker-height); /* مسافة كافية تحت الشريط */
+}
+@media (max-width: 600px) {
+  #resultText {
+    text-align: center;
+    line-height: 1.6;
+  }
+
+  #supportName {
+    display: block;
+    font-size: 30px;
+    margin-bottom: 8px;
+  }
+
+  #supportPhrase {
+    font-size: 22px;
+    font-weight: bold;
+    color: #fff;
+  }
+}
+
+  </style>
+</head>
+
+<body>
+
+  <!-- ✅ الشريط العلوي المتحرك -->
+  <div class="top-ticker" aria-hidden="true">
+    <div class="top-ticker__inner" role="marquee" aria-label="شريط علوي">
+      <h1>✨ معًا من أجل العمدة خالد صقر — صوتك يصنع الفرق ✨</h1>
+    </div>
+  </div>
+
+  <!-- شاشة الترحيب -->
+  <div id="intro">
+    <h1>العمدة خالد صقر – رمز المسدس</h1>
+    <img src="images/gun_animation_1.png" class="gun1">
+    <img src="images/gun_animation_2.png" class="gun2">
+    <img src="images/khaled_logo.png" class="logo">
+    <img src="images/khaled_support.png" class="support">
+    <div class="intro-overlay"></div> <!-- ✅ تمت الإضافة هنا -->
+  </div>
+
+  <!-- المحتوى -->
+  <div id="pageContent">
+    <div class="hero-logo-container">
+      <img src="images/khaled_logo.png" alt="شعار الحملة" class="hero-logo">
+    </div>
+
+    <div id="formSection">
+      <h1>ادعم مرشحك فى انتخابات مجلس النواب 2025</h1>
+      <input type="text" id="nameInput" placeholder="اكتب اسمك هنا">
+      <br>
+      <label for="imageInput" class="custom-file-label">📷 اختر صورتك</label>
+      <input type="file" id="imageInput" accept="image/*" style="display:none;">
+
+      <div id="cropperContainer">
+        <h3>قص صورتك</h3>
+        <div id="preview"><img id="imagePreview" alt="معاينة"></div>
+        <button id="cropBtn">اعتماد القص</button>
+      </div>
+
+      <button id="generateBtn">إنشاء كارت الدعم</button>
+
+      <div id="resultText">
+        <h2 id="supportName"></h2>
+        <p id="supportPhrase">أنا أدعم العمدة خالد صقر في انتخابات مجلس النواب 2025</p>
+      </div>
+
+      <div id="canvasContainer">
+        <canvas id="finalCanvas" width="1080" height="1350"></canvas>
+      </div>
+
+      <br>
+      <a id="downloadBtn" download="khaled_support_card.png">تحميل الكارت</a>
+      <a id="shareBtn" target="_blank">📤 شارك على فيسبوك</a>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
+  <script>
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        const intro = document.getElementById('intro');
+        intro.classList.add('fadeOut');
+        setTimeout(() => {
+          intro.style.display = 'none';
+          document.getElementById('pageContent').classList.add('visible');
+        }, 1500);
+      }, 8000);
+    });
+
+    const imageInput = document.getElementById('imageInput');
+    const cropperContainer = document.getElementById('cropperContainer');
+    const imagePreview = document.getElementById('imagePreview');
+    const cropBtn = document.getElementById('cropBtn');
+    const generateBtn = document.getElementById('generateBtn');
+    const finalCanvas = document.getElementById('finalCanvas');
+    const downloadBtn = document.getElementById('downloadBtn');
+    const shareBtn = document.getElementById('shareBtn');
+    const nameInput = document.getElementById('nameInput');
+
+    let cropper, croppedImageData;
+
+    imageInput.addEventListener('change', function () {
+      const file = this.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        imagePreview.src = e.target.result;
+        cropperContainer.style.display = 'block';
+        if (cropper) cropper.destroy();
+        cropper = new Cropper(imagePreview, { aspectRatio: 1, viewMode: 2 });
+      };
+      reader.readAsDataURL(file);
+    });
+
+    cropBtn.addEventListener('click', function () {
+      if (!cropper) return;
+      const canvas = cropper.getCroppedCanvas({ width: 300, height: 300 });
+      croppedImageData = canvas.toDataURL('image/png');
+      cropperContainer.style.display = 'none';
+      alert("✅ تم قص الصورة بنجاح، اضغط إنشاء كارت الدعم");
+    });
+
+    generateBtn.addEventListener('click', function () {
+      if (!nameInput.value.trim()) {
+        alert("من فضلك اكتب اسمك");
+        return;
+      }
+      if (!croppedImageData) {
+        alert("من فضلك اختر صورتك أولاً");
+        return;
+      }
+
+      const ctx = finalCanvas.getContext('2d');
+      const bg = new Image();
+      bg.src = "images/khaled_support.png";
+      const userImg = new Image();
+      userImg.src = croppedImageData;
+
+      bg.onload = () => {
+        ctx.clearRect(0, 0, finalCanvas.width, finalCanvas.height);
+        ctx.drawImage(bg, 0, 0, finalCanvas.width, finalCanvas.height);
+
+        // موضع الصورة على الكارت
+        const rectWidth = 120;   // عرض الصورة داخل الكارت
+        const rectHeight = 170;  // ارتفاع الصورة
+        const rectX = 80;        // المسافة من يسار الكارت (اضبط إذا لزم الأمر)
+        const rectY = 360;       // المسافة من أعلى الكارت (اضبط لتطابق الصندوق بالضبط)
+
+        // رسم مستطيل الصورة
+        ctx.save();
+        ctx.drawImage(userImg, rectX, rectY, rectWidth, rectHeight);
+        ctx.restore();
+
+      const supportName = document.getElementById("supportName");
+const supportPhrase = document.getElementById("supportPhrase");
+
+supportName.textContent = nameInput.value;
+
+// تقسيم النص تلقائيًا حسب حجم الشاشة
+if (window.innerWidth <= 600) {
+  supportPhrase.innerHTML = `أنا أدعم العمدة خالد صقر في انتخابات<br>مجلس النواب 2025`;
+} else {
+  supportPhrase.textContent = "أنا أدعم العمدة خالد صقر في انتخابات مجلس النواب 2025";
+}
+
+document.getElementById("resultText").style.display = "block";
+
+        finalCanvas.style.display = "block";
+        downloadBtn.style.display = "inline-block";
+        shareBtn.style.display = "inline-block";
+        downloadBtn.href = finalCanvas.toDataURL("image/png");
+        shareBtn.href = "https://www.facebook.com/sharer/sharer.php?u=https://www.facebook.com/share/1A8YXzAtjK/";
+      };
+    });
+  </script>
+</body>
+
+</html>
